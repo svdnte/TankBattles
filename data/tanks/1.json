@@ -1,0 +1,55 @@
+[
+  {
+    "name": "T201",
+    "reload": 2700,
+    "velocity": 0.8,
+    "image": {
+      "green": "../data/images/vehicle_images/1/green_tank.png",
+      "blue": "../data/images/vehicle_images/1/blue_tank.png"
+    },
+    "modifiers": {
+      "fast": false,
+      "through": false,
+      "slow": false,
+      "weak": false
+    },
+    "description": ["Стандартный танк", "с обычными снарядами"],
+    "minuses": ["Пробивает препятствия", "двумя выстрелами", "Пули летят с обычной", "скоростью"]
+  },
+
+  {
+    "name": "A380",
+    "reload": 4500,
+    "velocity": 1,
+    "image": {
+      "green": "../data/images/vehicle_images/2/green_tank.png",
+      "blue": "../data/images/vehicle_images/2/blue_tank.png"
+    },
+    "modifiers": {
+      "fast": true,
+      "through": true,
+      "slow": false,
+      "weak": false
+    },
+    "description": ["Снаряды пробивают", "любые препятствия"],
+    "minuses": ["Пули летят с высокой", "скоростью"]
+  },
+
+  {
+    "name": "L100",
+    "reload": 1200,
+    "velocity": 1,
+    "image": {
+      "green": "../data/images/vehicle_images/3/green_tank.png",
+      "blue": "../data/images/vehicle_images/3/blue_tank.png"
+    },
+    "modifiers": {
+      "fast": false,
+      "through": false,
+      "slow": true,
+      "weak": true
+    },
+    "description": ["Высокая", "скорострельность"],
+    "minuses": ["Не пробивает препятствия", "Пули летят медленно"]
+  }
+]
