@@ -84,7 +84,7 @@ class Level:
         write_text(self.info_screen, 15 * SCALE, 300 * SCALE, info_text, 60 * SCALE, 35, '#ADADAD')
 
         self.buttons = [
-            Button(self.info_screen, (WIDTH - WIDTH2) * 5 / 7, 750, "ВЫХОД", 25, self.set_exit, bgcolor="#232323",
+            Button(self.info_screen, (WIDTH - WIDTH2) * 5 / 7, 800, "ВЫХОД", 25, self.set_exit, bgcolor="#232323",
                    textcolor="#ADADAD", point_text_color="#919191", point_bg_color="#141414",  group=True),
             Button(self.info_screen, (WIDTH - WIDTH2) / 4, 800, "ПАУЗА", 25, self.set_pause, bgcolor="#232323",
                    textcolor="#ADADAD", point_text_color="#919191", point_bg_color="#141414", group=True)
