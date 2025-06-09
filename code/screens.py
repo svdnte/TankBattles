@@ -1,5 +1,3 @@
-import pygame
-
 from support import *
 
 pygame.mixer.pre_init(channels=5)
@@ -27,18 +25,23 @@ def start_screen():
     background = pygame.transform.scale(pygame.image.load(r'../data/images/background1.png'), (WIDTH, HEIGHT))
     screen.blit(background, (0, 0))
 
-    __btns = [("ИГРАТЬ", level_select_screen), ("МАГАЗИН", open_shop_screen), ("КАМПАНИЯ", start_campaign),
+    __btns = [("ИГРАТЬ", level_select_screen), ("КАМПАНИЯ", start_campaign), ("МАГАЗИН", open_shop_screen),
+              ("Создать уровень", create_level),
               ("ВЫХОД", terminate)]
 
     buttons = [
-        Button(screen, 'c', 480, __btns[0][0], 40, __btns[0][1], bgcolor=pygame.color.Color(12, 102, 68),
-               textcolor="white", point_bg_color="#023822", point_text_color="#AAAAAA")
+        Button(screen, WIDTH / 3, 480, __btns[0][0], 40, __btns[0][1], bgcolor=pygame.color.Color(12, 102, 68),
+               textcolor="white", point_bg_color="#023822", point_text_color="#AAAAAA", group=True),
+        Button(screen, WIDTH / 3 * 2, 480, __btns[1][0], 40, __btns[1][1], bgcolor=pygame.color.Color(12, 102, 68),
+               textcolor="white", point_bg_color="#023822", point_text_color="#AAAAAA", group=True),
+
     ]
 
     for i in range(1, 4):
-        buttons.append(Button(screen, WIDTH / 6 * 2 * i - WIDTH // 5 + WIDTH // 39, 650, __btns[i][0], 40, __btns[i][1],
-                              bgcolor=pygame.color.Color(12, 102, 68),
-                              textcolor="white", point_bg_color="#023822", point_text_color="#AAAAAA", group=True))
+        buttons.append(
+            Button(screen, WIDTH / 6 * 2 * i - WIDTH // 5 + WIDTH // 39, 650, __btns[i + 1][0], 40, __btns[i + 1][1],
+                   bgcolor=pygame.color.Color(12, 102, 68),
+                   textcolor="white", point_bg_color="#023822", point_text_color="#AAAAAA", group=True))
     pygame.display.flip()
 
     while True:
@@ -151,60 +154,16 @@ def open_shop_screen():
                 for btn in buttons:
                     if btn.rect.collidepoint([ev.pos[0],
                                               ev.pos[1] - pos_offs]):
+                        play_button_sound()
                         pl_tank = buttons.index(btn)
                         save()
                         open_shop_screen()
                 if exit_btn.rect.collidepoint(ev.pos):
                     exit_btn.pressed()
-        clock.tick(30)
+        clock.tick(15)
 
         screen.blit(shop_screen, (offset, HEIGHT - shop_screen.get_height() - offset))
         pygame.display.flip()
-
-    # while True:
-    #     try:
-    #         main_tank_data = data[main_tank]
-    #         main_tank_image = main_tank_data['image']["green"]
-    #
-    #         screen.blit(load_image(shop_background), (0, 0))
-    #         screen.blit(pygame.transform.scale(load_image(main_tank_image, color_key=-1),
-    #                                            (300 * SCALE, 300 * SCALE)),
-    #                     (WIDTH // 2 - 150 * SCALE, HEIGHT // 2))
-    #
-    #         write_text(screen, WIDTH * 0.75 * SCALE, 30, [str(money)], 0, 60, 'black')
-    #         write_text(screen, 0, 30, ["ВЫБЕРИТЕ ТАНК:"], 0, 60, 'black', x_centered=True)
-    #         ebc = write_text(screen, WIDTH * 0.1 * SCALE, 30, ['ВЫЙТИ'], 0, 60, 'black')
-    #         left_btn = write_text(screen, 35 * SCALE, 350 * SCALE, ['<'], 1 * SCALE, 70 * SCALE, 'black')
-    #         right_btn = write_text(screen, WIDTH - 70 * SCALE, 350 * SCALE, ['>'], 1 * SCALE, 70 * SCALE, 'black')
-    #
-    #         choose_btn = None
-    #
-    #         if main_tank != pl_tank:
-    #             choose_btn = write_text(screen, 0, HEIGHT * 0.9, ['ВЫБРАТЬ'], 1 * SCALE, 70 * SCALE, 'black',
-    #                                     x_centered=True)
-    #         else:
-    #             write_text(screen, 0, HEIGHT * 0.9, ['ВЫБРАНО'], 1 * SCALE, 70 * SCALE, 'white',
-    #                        x_centered=True)
-    #     except IndexError:
-    #         main_tank -= 1
-    #
-    #     for ev in pygame.event.get():
-    #         if ev.type == pygame.QUIT:
-    #             terminate()
-    #         if ev.type == pygame.MOUSEBUTTONDOWN:
-    #             if to_rect(ebc).collidepoint(ev.pos[0], ev.pos[1]):
-    #                 start_screen()
-    #             elif to_rect(left_btn).collidepoint(ev.pos[0], ev.pos[1]):
-    #                 main_tank -= 1 if main_tank != 0 else 0
-    #             elif to_rect(right_btn).collidepoint(ev.pos[0], ev.pos[1]):
-    #                 main_tank += 1
-    #             elif choose_btn:
-    #                 if to_rect(choose_btn).collidepoint(ev.pos[0], ev.pos[1]):
-    #                     pl_tank = main_tank
-    #                     save()
-
-    # pygame.display.flip()
-    # clock.tick(30)
 
 
 def start_campaign():
@@ -278,6 +237,7 @@ def level_select_screen():
             if ev.type == pygame.MOUSEBUTTONDOWN:
                 for lvl, cords in level_list.items():
                     if cords.collidepoint(ev.pos):
+                        play_button_sound()
                         game(lvl)
                         return
                 if exit_btn.rect.collidepoint(ev.pos):
@@ -307,20 +267,165 @@ def level_select_screen():
         clock.tick(FPS)
 
 
-# def create_level():
-#     screen.fill('black')
-#
-#     write_text(screen, 0, 20, ['СОЗДАТЬ УРОВЕНЬ'], 10, 50, 'white', x_centered=True)
-#
-#     # сделать поле клеточное как в первых пайгейм уроках, на него ставятся препятствия, игрок, противники.
-#
-#     while True:
-#         for ev in pygame.event.get():
-#             if ev.type == pygame.QUIT:
-#                 terminate()
-#
-#         pygame.display.flip()
-#         clock.tick(FPS)
+def create_level():
+    screen.fill('#231E21')
+    x = 30
+    y = 100
+    w = h = (HEIGHT - y - y // 4) // 16 * 16
+    step = h // 16
+
+    write_text(screen, 0, 20, ['СОЗДАТЬ УРОВЕНЬ'], 10, 50, 'white', x_centered=True)
+    write_text(screen, (WIDTH - x - w) * 3.3 // 2, y, ['ОБЪЕКТЫ:'], 10, 40, 'white')
+
+    table = [["." for _ in range(16)] for _ in range(16)]
+    pos_and_var = {}
+
+    def detect_position(pos_x, pos_y):
+        position_x = (pos_x - x) // step
+        position_y = (pos_y - y) // step
+        return int(position_x) if position_x >= 0 else 0, int(position_y) if position_y >= 0 else 0
+
+    def from_tCords_to_aCords(cords: tuple):
+        return cords[0] * step + x, cords[1] * step + y
+
+    def draw_table():
+        pygame.draw.rect(screen, "white", (x, y, w, h), 1, 1)
+        for i in range(1, 16):
+            pygame.draw.line(screen, "white", (x, y + step * i), (x + w, y + step * i))
+            pygame.draw.line(screen, "white", (x + step * i, y), (x + step * i, y + h))
+
+    def check_player():
+        for i in table:
+            for j in i:
+                if j == "@":
+                    return True
+        return False
+
+    def save():
+        if check_player():
+            levels = os.listdir('../data/levels')
+            counter = 1
+            for lvl in levels:
+                if "Мой уровень" in lvl:
+                    counter += 1
+            filename = f"Мой уровень {counter}.txt"
+
+            with open(f"../data/levels/{filename}", mode="w", encoding="utf-8") as file:
+                for i in table:
+                    for j in i:
+                        file.write(j)
+                    file.write("\n")
+            onCreate()
+            print("Success")
+
+    blue_tank = pygame.transform.scale(load_image(fr'../data/images/vehicle_images/1/blue_tank.png', color_key=-1),
+                                       (step, step))
+    green_tank = pygame.transform.scale(load_image(fr'../data/images/vehicle_images/1/green_tank.png', color_key=-1),
+                                        (step, step))
+    block = pygame.transform.scale(load_image(fr'../data/images/object_images/metal_box/metal_box.png', color_key=-1),
+                                   (step, step))
+
+    blue_tank_cords = to_rect_from_cords(3 * x + w, y + y + 80, step, step)
+    green_tank_cords = to_rect_from_cords(3 * x + w, y + y, step, step)
+    block_cords = to_rect_from_cords(3 * x + w, y + y + 160, step, step)
+
+    objects = [
+        (green_tank_cords, green_tank, "@"),
+        (blue_tank_cords, blue_tank, "$"),
+        (block_cords, block, "#")
+    ]
+    objects_set = []
+
+    screen.blit(green_tank, green_tank_cords)
+    screen.blit(blue_tank, blue_tank_cords)
+    screen.blit(block, block_cords)
+
+    pointedExitBtn = False
+    leading = None
+    choosen = None  # "g" "b" "o"
+    previous_cords = None
+    cords = [0, 0]
+    offset = [0, 0]
+    while True:
+        screen.fill('#231E21')
+        draw_table()
+        screen.blit(green_tank, (3 * x + w, y + y))
+        screen.blit(blue_tank, (3 * x + w, y + y + 80))
+        screen.blit(block, (3 * x + w, y + y + 160))
+        write_text(screen, 0, 20, ['СОЗДАТЬ УРОВЕНЬ'], 10, 50, 'white', x_centered=True)
+        write_text(screen, (WIDTH - x - w) * 3.3 // 2, y, ['ОБЪЕКТЫ:'], 10, 40, 'white')
+
+        if not pointedExitBtn:
+            exit_btn = Button(screen, 30, 20, "ВЫХОД", 20 * SCALE, start_screen,
+                              bgcolor="#100F0F",
+                              textcolor="#F0F0F0", point_bg_color="#000000", point_text_color="#CCCCCC")
+        else:
+            exit_btn = Button(screen, 30, 20, "ВЫХОД", 20 * SCALE, start_screen,
+                              bgcolor="#000000",
+                              textcolor="#CCCCCC")
+        save_btn = Button(screen, (WIDTH - x - w) * 3.3 // 2, HEIGHT - y // 4 - 60, "СОХРАНИТЬ", 20 * SCALE, save,
+                          bgcolor="#0EB23C", textcolor="#B7B7B5")
+
+        for ev in pygame.event.get():
+            if ev.type == pygame.QUIT:
+                terminate()
+            if ev.type == pygame.MOUSEBUTTONDOWN:
+                if exit_btn.rect.collidepoint(ev.pos):
+                    exit_btn.pressed()
+                if save_btn.rect.collidepoint(ev.pos):
+                    save_btn.pressed()
+                for item in objects:
+                    if item[0].collidepoint(ev.pos):
+                        if not (item[2] == "@" and check_player()):
+                            leading = item
+                            offset = [ev.pos[0] - item[0].x, ev.pos[1] - item[0].y]
+                            cords = [item[0].x, item[0].y]
+                if not leading:
+                    for i in range(len(objects_set)):
+                        aCords = from_tCords_to_aCords(objects_set[i][1])
+                        if to_rect_from_cords(*aCords, step, step).collidepoint(ev.pos):
+                            leading = objects_set[i][0]
+                            cord = objects_set[i][1]
+                            offset = [ev.pos[0] - cord[0] * step - x, ev.pos[1] - cord[1] * step - y]
+                            cords = aCords
+                            objects_set.pop(i)
+                            table[cord[1]][cord[0]] = "."
+                            break
+
+            if ev.type == pygame.MOUSEBUTTONUP:
+                if not leading:
+                    continue
+                if to_rect_from_cords(x, y, w, h).collidepoint([ev.pos[0], ev.pos[1]]):
+                    pos = detect_position(ev.pos[0] - offset[0] + step // 2, ev.pos[1] - offset[1] + step // 2)
+                    if table[pos[1]][pos[0]] != ".":
+                        objects_set.remove(pos_and_var[pos])
+                    objects_set.append((leading, pos))
+                    table[pos[1]][pos[0]] = leading[2]
+                    pos_and_var[pos] = (leading, pos)
+
+                leading = None
+                cords = []
+                offset = []
+
+            elif ev.type == pygame.MOUSEMOTION:
+                if exit_btn.rect.collidepoint(ev.pos):
+                    pointedExitBtn = True
+                    exit_btn.pointed()
+                else:
+                    exit_btn.set_default()
+                    pointedExitBtn = False
+
+                if leading:
+                    cords = [ev.pos[0] - offset[0], ev.pos[1] - offset[1]]
+
+        for obj in objects_set:
+            screen.blit(obj[0][1], (obj[1][0] * step + x, y + obj[1][1] * step))
+
+        if leading:
+            screen.blit(leading[1], cords)
+
+        pygame.display.flip()
+        clock.tick(FPS)
 
 
 def end_game(result, level, mode='training'):
@@ -370,6 +475,8 @@ def end_game(result, level, mode='training'):
                     terminate()
                 if ev.type == pygame.MOUSEBUTTONDOWN:
                     if exit_btn.rect.collidepoint(ev.pos):
+                        set_main_music()
+                        set_volume(0.7)
                         exit_btn.pressed()
                         return
                 if ev.type == pygame.MOUSEMOTION:
@@ -410,12 +517,13 @@ def game(level, mode='training'):
 
             if move[0] in ('loose', 'win'):
                 if mode == 'training':
-                    set_misic(r'../data/sounds/music/main_theme.mp3')
                     end_game(move, level)
                 else:
                     end_game(move, level, mode='campaign')
                     return
             elif move == 'exit':
+                set_main_music()
+                set_volume(0.7)
                 level_select_screen()
 
 
@@ -455,7 +563,7 @@ def onCreate():
 
     for level in levels:
         if os.path.isfile(f'../data/images/preview_images/{level.replace(".txt", ".png")}'):
-            print(True)
+            pass
         else:
             preview = LevelPreview(level).battlefield
             pygame.image.save(preview, f'../data/images/preview_images/{level.replace(".txt", ".png")}')
@@ -465,4 +573,5 @@ def main():
     # set_misic(r'../data/sounds/music/main_theme.mp3')
     # congratulation_screen(['Папа, поздравляю тебя с днём рождения!'])
     onCreate()
+    set_main_music()
     start_screen()

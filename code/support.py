@@ -61,9 +61,10 @@ shop_background = r'../data/images/shop_background.jpg'
 
 TILE_SIZE = int(50 * SCALE)
 VELOCITY = TILE_SIZE / FPS * SCALE
-print(VELOCITY)
 
 
 directions = ['N', 'S', 'W', 'E']
 
 GAME_NAME = "TANK BATTLES"
+
+MAIN_FONT = '../data/fonts/ft40.ttf'

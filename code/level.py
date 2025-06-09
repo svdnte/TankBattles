@@ -31,7 +31,8 @@ def genarate_level(level, all_sprites, tile_sprites, obstacle_sprites, tank_spri
 class Level:
     def __init__(self, level: str):
         # set_misic(r'../data/sounds/music/battle_theme.mp3')
-        set_volume(0.1)
+        set_battle_music()
+        set_volume(0.4)
 
         with open(fr'../data/levels/{level}', 'r') as lvl:
             self.level_map = lvl.readlines()

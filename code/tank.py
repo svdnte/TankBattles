@@ -41,7 +41,7 @@ class Tank(pygame.sprite.Sprite):
         # self.shoot_sound = pygame.mixer.Sound(r'../data/sounds/effects/shoot.wav')
         self.shoot_sound = pygame.mixer.Sound(r'../data/sounds/effects/shoot.mp3')
         self.explosion_sound = pygame.mixer.Sound(r"../data/sounds/effects/hit.mp3")
-        self.explosion_sound.set_volume(0.34)
+        self.explosion_sound.set_volume(1)
 
         self.modifiers = {"fast": False, 'through': False, "slow": False, "weak": False}
 
@@ -108,6 +108,20 @@ class Tank(pygame.sprite.Sprite):
 
                 direction = self.check_collide_direction(coll)
             return True
+        else:
+            if self.rect.x < 0:
+                self.rect.x = 1
+                return True
+            elif self.rect.x > WIDTH2 - self.rect.w:
+                self.rect.x = WIDTH2 - self.rect.w - 1
+                return True
+            if self.rect.y < 0:
+                self.rect.y = 1
+                return True
+            elif self.rect.y > HEIGHT2 - self.rect.h:
+                self.rect.y = HEIGHT2 - self.rect.h - 1
+                return True
+
         return False
 
     def direction_changed(self):
@@ -196,7 +210,7 @@ class Player(Tank):
         self.game_over = False
         self.enemies_destroyed = 0
 
-        self.shoot_sound.set_volume(0.5)
+        self.shoot_sound.set_volume(1)
 
     def bullet_hit(self, obj):
         self.enemies_destroyed += 1
@@ -229,7 +243,7 @@ class Enemy(Tank):
         self.direction = random.choice(directions)
         self.direction_changed()
 
-        self.shoot_sound.set_volume(0.3)
+        self.shoot_sound.set_volume(0.6)
 
     def update(self):
         self.check_reload()
@@ -246,10 +260,10 @@ class Enemy(Tank):
         if ej:
             self.change_direction()
 
-        if not (0 < self.rect.x < WIDTH2 - self.rect.w) or not (0 < self.rect.y < HEIGHT2 - self.rect.h):
-            move = self.convert(self.direction)
-            self.make_move(-move[0] * 3, -move[1] * 3)
-            self.change_direction()
+        # if not (0 < self.rect.x < WIDTH2 - self.rect.w) or not (0 < self.rect.y < HEIGHT2 - self.rect.h):
+        #     move = self.convert(self.direction)
+        #     self.make_move(-move[0] * 3, -move[1] * 3)
+        #     self.change_direction()
 
     def change_direction(self):
         d = directions[::]

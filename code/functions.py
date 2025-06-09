@@ -50,3 +50,7 @@ def write_text(screen, x, y, text, step, size, color, x_centered=False):
 
 def to_rect(data):
     return pygame.Rect(data[0][1])
+
+
+def to_rect_from_cords(x, y, w, h):
+    return pygame.Rect(x, y, w, h)

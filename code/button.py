@@ -1,4 +1,5 @@
 import pygame.font
+from mixer import play_button_sound
 
 
 class Button:
@@ -50,6 +51,7 @@ class Button:
         self.set_default()
 
     def pressed(self):
+        play_button_sound()
         self.link()
 
     def set_default(self):
