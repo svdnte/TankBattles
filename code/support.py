@@ -68,3 +68,10 @@ directions = ['N', 'S', 'W', 'E']
 GAME_NAME = "TANK BATTLES"
 
 MAIN_FONT = '../data/fonts/ft40.ttf'
+
+# COLORS
+BG_COLOR = "#231E21"
+TITLE_COLOR = "#F9F9F9"
+GREEN_COLOR = "#0EB23C"
+GRAY_COLOR = "#B7B7B5"
+DARK_GRAY_COLOR = "#939392"

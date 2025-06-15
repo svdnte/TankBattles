@@ -39,8 +39,6 @@ class Level:
         self.level = level.replace("Уровень", "").replace(".txt", "")
         self.generate_sprites()
 
-        self.background = load_image(game_background)
-
         self.battlefield = pygame.Surface((800 * SCALE, 800 * SCALE))
         self.info_screen = pygame.Surface((400 * SCALE, 800 * SCALE))
         self.player, self.enemies = genarate_level(self.level_map, self.all_sprites, self.tile_sprites,
@@ -170,8 +168,6 @@ class LevelPreview(Level):
             self.level_map = lvl.readlines()
         self.level = level
         self.generate_sprites()
-
-        self.background = load_image(game_background)
 
         self.battlefield = pygame.Surface((800 * SCALE, 800 * SCALE))
         self.info_screen = pygame.Surface((400 * SCALE, 800 * SCALE))
